@@ -162,6 +162,28 @@ def mark_done(question_id):
         f.write("%s|%s" % (today_marker(), question_id))
 
 
+def generate_cover(qset, out_path):
+    """按题库主题生成封面（调用 generate_cover.py，用 Anaconda Python 因有 PIL）"""
+    qset_path = os.path.join(QUESTIONS_DIR, qset["id"] + ".json")
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    # 优先 Anaconda Python（有 PIL）
+    py_candidates = [
+        r"D:\Users\22129\Anaconda3\python.exe",
+        sys.executable,
+    ]
+    for py in py_candidates:
+        if not os.path.exists(py):
+            continue
+        r = subprocess.run(
+            [py, os.path.join(SCRIPTS_DIR, "generate_cover.py"), qset_path, out_path],
+            capture_output=True, text=True, encoding="utf-8", errors="replace"
+        )
+        if r.returncode == 0 and os.path.exists(out_path):
+            return out_path
+        log("封面生成尝试失败(%s): %s" % (py, r.stderr[-200:]))
+    raise RuntimeError("封面生成失败")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="只生成不发布")
@@ -202,7 +224,15 @@ def main():
     if not cfg.get("appid") or not cfg.get("secret"):
         raise RuntimeError("缺少凭据：请创建 %s 填入 appid/secret" % CONFIG_PATH)
 
-    cover = os.path.join(BASE, "notes", "img", "头图-900x383.png")
+    # 按当天题库主题生成动态封面
+    cover = os.path.join(OUTPUT_DIR, "covers", "%s-%s.png" % (date_str, qset["id"]))
+    try:
+        generate_cover(qset, cover)
+        log("已生成主题封面: %s" % cover)
+    except Exception as e:
+        cover = os.path.join(BASE, "notes", "img", "头图-900x383.png")
+        log("主题封面生成失败，回退默认封面: %s" % e)
+
     digest = "免费测试：%s。凭第一直觉作答，立即获得完整结果解读，完全免费。" % qset["topic"]
     media_id = publish(cfg["appid"], cfg["secret"], qset["title"], html_path, cover, digest)
     mark_done(qset["id"])
