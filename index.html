@@ -465,19 +465,38 @@ function finish(){
     .sort((a,b) => b.pct - a.pct || b.v - a.v);
 
   const topSin = sinList[0], topVirt = virtList[0];
-  document.getElementById('rBadge').textContent = DIMS[topSin.k].icon;
-  document.getElementById('rSinName').textContent = DIMS[topSin.k].zh;
-  document.getElementById('rSinEn').textContent = DIMS[topSin.k].en;
-  document.getElementById('rSinPct').textContent = topSin.pct + '%';
-  document.getElementById('rSinDesc').textContent = SIN_DESC[topSin.k];
-  document.getElementById('rVirtName').textContent = DIMS[topVirt.k].zh;
-  document.getElementById('rVirtEn').textContent = DIMS[topVirt.k].en;
-  document.getElementById('rVirtDesc').textContent = VIRT_DESC[topVirt.k];
+  // 边界：罪/德侧得分全为 0 时，不硬选一个 0% 的主罪/主德
+  const noSin = topSin.pct <= 0;
+  const noVirt = topVirt.pct <= 0;
+
+  if (noSin) {
+    document.getElementById('rBadge').textContent = '⚖️';
+    document.getElementById('rSinName').textContent = '无明显主罪';
+    document.getElementById('rSinEn').textContent = 'Balanced';
+    document.getElementById('rSinPct').textContent = '0%';
+    document.getElementById('rSinDesc').textContent = '你的作答几乎没有触及七宗罪的暗面——这并非没有阴影，而是你更习惯用理性、善意与自省面对生活。与其说是「无罪」，不如说你把能量都导向了光芒面。';
+  } else {
+    document.getElementById('rBadge').textContent = DIMS[topSin.k].icon;
+    document.getElementById('rSinName').textContent = DIMS[topSin.k].zh;
+    document.getElementById('rSinEn').textContent = DIMS[topSin.k].en;
+    document.getElementById('rSinPct').textContent = topSin.pct + '%';
+    document.getElementById('rSinDesc').textContent = SIN_DESC[topSin.k];
+  }
+
+  if (noVirt) {
+    document.getElementById('rVirtName').textContent = '无明显主德';
+    document.getElementById('rVirtEn').textContent = 'Balanced';
+    document.getElementById('rVirtDesc').textContent = '这次作答里你没有特别突出的美德倾向——试试换一种真实的状态再测一次，让光芒面浮出水面。';
+  } else {
+    document.getElementById('rVirtName').textContent = DIMS[topVirt.k].zh;
+    document.getElementById('rVirtEn').textContent = DIMS[topVirt.k].en;
+    document.getElementById('rVirtDesc').textContent = VIRT_DESC[topVirt.k];
+  }
 
   renderRank('sinRank', sinList, 'sin');
   renderRank('virtRank', virtList, 'virt');
   renderRadar();
-  renderSummary(topSin, topVirt);
+  renderSummary(topSin, topVirt, noSin, noVirt);
 
   // 滚动到顶部
   window.scrollTo(0,0);
@@ -543,8 +562,10 @@ function renderRadar(){
   document.getElementById('radarBox').innerHTML = svg;
 }
 
-function renderSummary(topSin, topVirt){
-  const s = DIMS[topSin.k].zh, v = DIMS[topVirt.k].zh;
+function renderSummary(topSin, topVirt, noSin, noVirt){
+  let s, v;
+  if (noSin) s = '克制'; else s = DIMS[topSin.k].zh;
+  if (noVirt) v = '自省'; else v = DIMS[topVirt.k].zh;
   document.getElementById('rSummary').textContent =
     '你是一座「' + s + '」与「' + v + '」共存的矛盾体——' +
     '影子里的' + s + '是你未被驯服的能量，而光芒中的' + v + '是你最珍贵的底色。' +
