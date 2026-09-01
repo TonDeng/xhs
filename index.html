@@ -562,7 +562,8 @@ function restart(){
 }
 
 /* ================= 商品链接配置 =================
-   上线时把千帆商品链接填入 PRODUCT_URL（或 URL 加 ?product=xxx 覆盖） */
+   上线时把千帆商品链接填入 PRODUCT_URL（或 URL 加 ?product=xxx 覆盖）
+   例：https://tondeng.github.io/xhs/?product=https://ark.xiaohongshu.com/... */
 const PRODUCT_URL = '';
 const urlProduct = new URLSearchParams(location.search).get('product');
 const BUY_URL = urlProduct || PRODUCT_URL || '';
