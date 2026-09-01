@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>七宗罪 × 七美德 · 人格光影测试</title>
+<meta name="description" content="21 道情境题，测出你内心深处的七宗罪与七美德，生成专属人格光影报告。">
+<style>
+  :root{
+    --bg:#0e0b12;
+    --bg2:#16121f;
+    --card:#1d1728;
+    --gold:#c9a961;
+    --gold2:#e8cf9a;
+    --cream:#f2e9d8;
+    --muted:#a89a82;
+    --line:rgba(201,169,97,.25);
+    --sin:#b3544a;
+    --virtue:#4a8f7a;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #241b33 0%, transparent 60%),
+      radial-gradient(900px 500px at 90% 110%, #1a1226 0%, transparent 55%),
+      var(--bg);
+    color:var(--cream);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Serif SC",serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 20px 60px;min-height:100vh;display:flex;flex-direction:column}
+
+  /* ---------- 通用 ---------- */
+  .screen{display:none;flex-direction:column;flex:1;animation:fade .45s ease}
+  .screen.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .orn{color:var(--gold);font-size:22px;letter-spacing:6px;text-align:center;margin:6px 0 2px;opacity:.85}
+  h1.kicker{font-size:12px;letter-spacing:6px;color:var(--gold);text-align:center;text-transform:uppercase;margin-top:34px}
+  h1.title{font-size:34px;text-align:center;font-weight:700;letter-spacing:2px;margin-top:10px;background:linear-gradient(180deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  p.sub{text-align:center;color:var(--muted);font-size:14px;margin-top:10px}
+  .btn{
+    display:block;width:100%;padding:16px;border:none;border-radius:14px;cursor:pointer;
+    background:linear-gradient(135deg,var(--gold),#a8843f);color:#17120a;font-size:17px;font-weight:700;letter-spacing:4px;
+    font-family:inherit;transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 6px 24px rgba(201,169,97,.28);
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line);box-shadow:none}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .chip{display:inline-block;font-size:12px;color:var(--gold);border:1px solid var(--line);border-radius:99px;padding:4px 12px;margin:2px}
+
+  /* ---------- 封面 ---------- */
+  .cover-hero{margin:44px auto 8px;width:150px;height:150px;position:relative}
+  .cover-hero svg{width:100%;height:100%}
+  .cover-meta{display:flex;justify-content:center;gap:8px;margin:20px 0 6px;flex-wrap:wrap}
+
+  /* ---------- 答题 ---------- */
+  .progress-wrap{margin-top:26px}
+  .progress-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .progress-bar{height:6px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;transition:width .3s ease}
+  .q-num{margin-top:26px;font-size:13px;color:var(--gold);letter-spacing:2px}
+  .q-text{font-size:21px;font-weight:600;margin-top:10px;line-height:1.55}
+  .opts{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+  .opt{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;
+    font-size:15px;cursor:pointer;transition:all .18s ease;font-family:inherit;color:var(--cream);text-align:left;
+  }
+  .opt:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .opt.selected{background:linear-gradient(135deg,rgba(201,169,97,.18),rgba(201,169,97,.05));border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+  .opt .mark{display:inline-block;width:18px;height:18px;border:1px solid var(--line);border-radius:50%;margin-right:10px;vertical-align:-3px;transition:all .15s}
+  .opt.selected .mark{background:var(--gold);border-color:var(--gold);box-shadow:inset 0 0 0 3px var(--card)}
+
+  /* ---------- 结果 ---------- */
+  .result-head{text-align:center;margin-top:30px}
+  .result-badge{width:110px;height:110px;margin:0 auto;border-radius:50%;border:1px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;font-size:44px;background:radial-gradient(circle at 35% 30%, #2b2138, #17121f);box-shadow:0 0 40px rgba(201,169,97,.25)}
+  .result-kicker{font-size:13px;letter-spacing:4px;color:var(--gold);margin-top:18px}
+  .result-main{font-size:30px;font-weight:700;margin-top:6px;letter-spacing:2px}
+  .result-en{font-size:13px;color:var(--muted);letter-spacing:1px;margin-top:4px}
+  .scoreline{font-size:13px;color:var(--muted);margin-top:10px}
+  .scoreline b{color:var(--gold);font-size:17px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-top:18px}
+  .panel h3{font-size:15px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .panel h3::before{content:"";width:18px;height:1px;background:var(--gold);display:inline-block}
+  .panel p{font-size:14.5px;color:var(--cream);text-align:justify}
+  .panel .badge-line{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .rank-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.08)}
+  .rank-item:last-child{border-bottom:none}
+  .rank-no{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gold)}
+  .rank-name{flex:1;font-size:15px}
+  .rank-pct{font-size:12px;color:var(--muted)}
+  .bar-wrap{flex-basis:34%;height:6px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+
+  .chart-box{margin-top:20px}
+  .chart-box svg{width:100%;height:auto;display:block}
+
+  .report-cta{margin-top:24px;text-align:center}
+  .report-cta .btn{margin-top:14px}
+  .tiny{font-size:12px;color:var(--muted);margin-top:10px;text-align:center}
+
+  .actions{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+
+  footer{margin-top:auto;padding-top:40px;text-align:center;font-size:12px;color:#6b5f4d}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+
+  <!-- ============ 封面 ============ -->
+  <section class="screen active" id="screen-cover">
+    <h1 class="kicker">Personality Light &amp; Shadow</h1>
+    <div class="cover-hero">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#e8cf9a"/><stop offset="1" stop-color="#a8843f"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="url(#g1)" stroke-width="1.5" opacity=".6"/>
+        <path d="M60 20 L68 52 L100 60 L68 68 L60 100 L52 68 L20 60 L52 52 Z" fill="url(#g1)"/>
+        <circle cx="60" cy="60" r="9" fill="#17120a" stroke="url(#g1)" stroke-width="2"/>
+      </svg>
+    </div>
+    <h1 class="title">七宗罪 × 七美德</h1>
+    <p class="sub">人格光影测试 · 21 道情境题 · 约 3 分钟</p>
+    <div class="cover-meta">
+      <span class="chip">傲慢 · 贪婪 · 色欲</span>
+      <span class="chip">嫉妒 · 暴食 · 暴怒 · 懒惰</span>
+      <span class="chip">谦卑 · 慷慨 · 贞洁</span>
+      <span class="chip">耐心 · 节制 · 勤奋 · 仁爱</span>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="startQuiz()">开始测试</button>
+      <button class="btn ghost" onclick="document.getElementById('screen-about').classList.add('active');document.getElementById('screen-cover').classList.remove('active');window.scrollTo(0,0)">了解测试</button>
+    </div>
+    <footer>仅供自我探索与娱乐参考</footer>
+  </section>
+
+  <!-- ============ 关于 ============ -->
+  <section class="screen" id="screen-about">
+    <h1 class="kicker">About</h1>
+    <h1 class="title" style="font-size:24px">关于本测试</h1>
+    <p class="sub">中世纪天主教哲学将人性划分为七宗原罪与对应的七种德性。本测试用现代心理学场景重新演绎这套古老智慧，帮助你看清自己性格中的「阴影面」与「光芒面」。</p>
+    <div class="panel" style="margin-top:26px">
+      <h3>七宗罪</h3>
+      <p>傲慢 Pride · 贪婪 Greed · 色欲 Lust · 嫉妒 Envy · 暴食 Gluttony · 暴怒 Wrath · 懒惰 Sloth</p>
+    </div>
+    <div class="panel">
+      <h3>七美德</h3>
+      <p>谦卑 Humility · 慷慨 Charity · 贞洁 Chastity · 耐心 Patience · 节制 Temperance · 勤奋 Diligence · 仁爱 Kindness</p>
+    </div>
+    <div class="panel">
+      <h3>怎么玩</h3>
+      <p>共 21 道情境题，请凭第一直觉选择最贴近你的选项。完成后你将获得：① 你的「主罪」与「主德」；② 14 维人格雷达图；③ 专属性格解读。</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="startQuiz()">开始测试</button>
+      <button class="btn ghost" onclick="document.getElementById('screen-cover').classList.add('active');document.getElementById('screen-about').classList.remove('active');window.scrollTo(0,0)">返回</button>
+    </div>
+  </section>
+
+  <!-- ============ 答题 ============ -->
+  <section class="screen" id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-top"><span id="qIndex">第 1 题</span><span id="qTotal">/ 21</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="q-num" id="qTag">QUESTION</div>
+    <div class="q-text" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div style="margin-top:26px"><button class="btn ghost" id="btnNext" disabled onclick="nextQuestion()">下一题</button></div>
+  </section>
+
+  <!-- ============ 结果 ============ -->
+  <section class="screen" id="screen-result">
+    <div class="result-head">
+      <div class="result-badge" id="rBadge">⚖️</div>
+      <div class="result-kicker">你的主罪</div>
+      <div class="result-main" id="rSinName">——</div>
+      <div class="result-en" id="rSinEn"></div>
+      <div class="scoreline">阴影浓度 <b id="rSinPct">--%</b></div>
+    </div>
+
+    <div class="panel">
+      <h3>主罪解读</h3>
+      <p id="rSinDesc"></p>
+    </div>
+
+    <div class="panel">
+      <h3>主德解读</h3>
+      <p><b id="rVirtName" style="color:var(--gold2)"></b>（<span id="rVirtEn"></span>）</p>
+      <p id="rVirtDesc" style="margin-top:10px"></p>
+    </div>
+
+    <div class="panel">
+      <h3>罪与德 · 排行</h3>
+      <div id="sinRank"></div>
+    </div>
+
+    <div class="panel">
+      <h3>德之辉 · 排行</h3>
+      <div id="virtRank"></div>
+    </div>
+
+    <div class="panel chart-box">
+      <h3>14 维人格雷达</h3>
+      <div id="radarBox"></div>
+    </div>
+
+    <div class="panel">
+      <h3>综合画像</h3>
+      <p id="rSummary"></p>
+    </div>
+
+    <div class="report-cta">
+      <div class="tiny">想获得更深入的万字解读、行为建议与专属修炼路线？</div>
+      <button class="btn" id="btnBuy">获取完整报告 →</button>
+      <div class="tiny" style="margin-top:8px">完整报告为付费内容 · 支付后自动发送</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" onclick="restart()">重新测试</button>
+    </div>
+    <footer>测试结果仅供自我探索与娱乐参考</footer>
+  </section>
+
+</div>
+
+<script>
+/* ================= 题库 =================
+   14 个维度：7 罪 + 7 德。每个选项映射唯一维度，权重 1-2。 */
+const DIMS = {
+  pride:{en:"Pride",zh:"傲慢",side:"sin",icon:"👑",color:"#c0504d"},
+  greed:{en:"Greed",zh:"贪婪",side:"sin",icon:"💰",color:"#c07a2a"},
+  lust:{en:"Lust",zh:"色欲",side:"sin",icon:"🔥",color:"#b3456e"},
+  envy:{en:"Envy",zh:"嫉妒",side:"sin",icon:"🍋",color:"#7d8f2f"},
+  gluttony:{en:"Gluttony",zh:"暴食",side:"sin",icon:"🍽️",color:"#a05d2a"},
+  wrath:{en:"Wrath",zh:"暴怒",side:"sin",icon:"😡",color:"#a3311f"},
+  sloth:{en:"Sloth",zh:"懒惰",side:"sin",icon:"🛋️",color:"#6a6a78"},
+  humility:{en:"Humility",zh:"谦卑",side:"virt",icon:"🕊️",color:"#4a8f7a"},
+  charity:{en:"Charity",zh:"慷慨",side:"virt",icon:"🎁",color:"#3f8f8f"},
+  chastity:{en:"Chastity",zh:"贞洁",side:"virt",icon:"🌙",color:"#5d7fa8"},
+  patience:{en:"Patience",zh:"耐心",side:"virt",icon:"⏳",color:"#6f8f4a"},
+  temperance:{en:"Temperance",zh:"节制",side:"virt",icon:"⚖️",color:"#8a7aa8"},
+  diligence:{en:"Diligence",zh:"勤奋",side:"virt",icon:"🛠️",color:"#8f6a45"},
+  kindness:{en:"Kindness",zh:"仁爱",side:"virt",icon:"💛",color:"#c9a23f"}
+};
+
+const QUESTIONS = [
+  {tag:"职场",text:"同事在群里晒出刚拿到的晋升通知，你的第一反应是？",
+   opts:[
+     {t:"心里泛酸，觉得他只是运气好而已",d:"envy",w:2},
+     {t:"立刻盘算自己什么时候能超过他",d:"pride",w:2},
+     {t:"真心恭喜，主动问他需要什么帮忙",d:"kindness",w:2},
+     {t:"平静地点赞，继续做自己的事",d:"temperance",w:1}]},
+  {tag:"消费",text:"晚上刷到购物直播，主播正在推你种草很久的东西，你会？",
+   opts:[
+     {t:"立刻下单，先拥有再说",d:"greed",w:2},
+     {t:"加购但不买，等真需要再说",d:"temperance",w:2},
+     {t:"顺手给家人也带一份",d:"charity",w:2},
+     {t:"关掉直播，去做手头的事",d:"diligence",w:1}]},
+  {tag:"日常",text:"月底发现钱总是不知不觉花光，你更接近哪种状态？",
+   opts:[
+     {t:"花钱买开心，千金散尽还复来",d:"greed",w:1},
+     {t:"有记账习惯，每笔都清清楚楚",d:"temperance",w:2},
+     {t:"经常为朋友买单，大家开心就好",d:"charity",w:2},
+     {t:"能省则省，攒钱让我有安全感",d:"diligence",w:1}]},
+  {tag:"感情",text:"伴侣收到异性发来的暧昧消息，你的第一反应是？",
+   opts:[
+     {t:"当场炸毛，必须问个清楚",d:"wrath",w:2},
+     {t:"怀疑自己不够好，胡思乱想",d:"envy",w:1},
+     {t:"平静地问对方，听ta解释",d:"patience",w:2},
+     {t:"心里别扭但忍住不说",d:"sloth",w:1}]},
+  {tag:"通勤",text:"早高峰地铁上，有人踩了你一脚还毫不道歉，你会？",
+   opts:[
+     {t:"立刻怼回去，凭什么忍你",d:"wrath",w:2},
+     {t:"心里骂一遍，但懒得开口",d:"sloth",w:1},
+     {t:"对方可能没注意，算了",d:"patience",w:2},
+     {t:"提醒对方注意，语气平静",d:"kindness",w:1}]},
+  {tag:"社交",text:"朋友聚会，大家正聊一个你插不上话的话题，你会？",
+   opts:[
+     {t:"硬把话题引到自己擅长的领域",d:"pride",w:2},
+     {t:"安静听，找机会再参与",d:"humility",w:2},
+     {t:"偷偷刷手机等散场",d:"sloth",w:2},
+     {t:"主动问细节，让对方多说",d:"kindness",w:1}]},
+  {tag:"深夜",text:"深夜独自一人，你最容易陷入哪种状态？",
+   opts:[
+     {t:"刷到停不下来，越熬越精神",d:"gluttony",w:2},
+     {t:"回想白天的事，越想越气",d:"wrath",w:1},
+     {t:"看看别人过得多好，酸了",d:"envy",w:2},
+     {t:"按时睡觉，明天还要早起",d:"diligence",w:2}]},
+  {tag:"工作",text:"接到一个难度很高、可能做砸的任务，你会？",
+   opts:[
+     {t:"先拖着，等最后一刻再说",d:"sloth",w:2},
+     {t:"马上拆解任务，从第一步开始",d:"diligence",w:2},
+     {t:"先问清楚标准，不怕暴露不懂",d:"humility",w:2},
+     {t:"自己硬扛，不能显得不行",d:"pride",w:1}]},
+  {tag:"旅行",text:"旅行时看到当地特产店，你通常会？",
+   opts:[
+     {t:"一样来一点，来都来了",d:"gluttony",w:2},
+     {t:"挑一两件真正喜欢的",d:"temperance",w:2},
+     {t:"给每个朋友都带一份",d:"charity",w:2},
+     {t:"看看就好，不买也行",d:"sloth",w:1}]},
+  {tag:"网络",text:"刷到别人晒豪宅、晒旅行、晒对象，你心里？",
+   opts:[
+     {t:"凭什么他都有，我没有",d:"envy",w:2},
+     {t:"有朝一日我也要这样",d:"pride",w:1},
+     {t:"为对方开心，顺手点赞",d:"kindness",w:2},
+     {t:"各人有各人的路，不比较",d:"humility",w:2}]},
+  {tag:"周末",text:"周末的早晨，窗外阳光正好，你会？",
+   opts:[
+     {t:"睡到自然醒，怎么舒服怎么来",d:"sloth",w:2},
+     {t:"起床做一顿丰盛的早餐犒劳自己",d:"gluttony",w:1},
+     {t:"按计划学习、运动、见朋友",d:"diligence",w:2},
+     {t:"慢慢来，享受不急的早晨",d:"patience",w:1}]},
+  {tag:"冲突",text:"和亲近的人吵架后，冷静下来你会？",
+   opts:[
+     {t:"等他先低头，我没错",d:"pride",w:2},
+     {t:"主动找对方把话说开",d:"humility",w:2},
+     {t:"冷战几天再说",d:"wrath",w:1},
+     {t:"担心关系破裂，先服软",d:"patience",w:1}]},
+  {tag:"美食",text:"面对一桌自助餐，你的策略是？",
+   opts:[
+     {t:"先装满一轮，回本要紧",d:"gluttony",w:2},
+     {t:"挑最爱吃的，吃好不吃撑",d:"temperance",w:2},
+     {t:"先看别人怎么吃，跟着来",d:"humility",w:1},
+     {t:"慢慢吃，和同桌的人聊天",d:"kindness",w:1}]},
+  {tag:"欲望",text:"心动的人主动约你，但你们认识不久，你会？",
+   opts:[
+     {t:"赴约，感觉对了就顺其自然",d:"lust",w:2},
+     {t:"先多了解，不急着投入",d:"chastity",w:2},
+     {t:"紧张又兴奋，但不敢答应",d:"envy",w:1},
+     {t:"告诉自己专心事业，拒绝",d:"diligence",w:1}]},
+  {tag:"排位",text:"游戏连跪十把，队友还在互喷，你会？",
+   opts:[
+     {t:"开麦对喷，输人不输阵",d:"wrath",w:2},
+     {t:"卸载游戏，眼不见心不烦",d:"sloth",w:1},
+     {t:"调整心态，下一把稳着打",d:"patience",w:2},
+     {t:"默默看录像找自己的问题",d:"humility",w:2}]},
+  {tag:"机会",text:"一个明显是「天上掉馅饼」的机会摆在面前，你会？",
+   opts:[
+     {t:"先抓住再说，万一真赚了呢",d:"greed",w:2},
+     {t:"先核实来源，不轻信",d:"temperance",w:2},
+     {t:"机会哪有天上掉的，绕开",d:"sloth",w:1},
+     {t:"拉上朋友一起研究",d:"charity",w:1}]},
+  {tag:"审美",text:"看到外形出众的陌生人，你通常会？",
+   opts:[
+     {t:"忍不住多看几眼，欣赏美好",d:"lust",w:1},
+     {t:"心里羡慕，希望自己也这样",d:"envy",w:2},
+     {t:"欣赏但不代入，美是多元的",d:"humility",w:1},
+     {t:"留意对方谈吐，不只是外表",d:"chastity",w:2}]},
+  {tag:"答应",text:"答应了别人的事，却发现自己做不完，你会？",
+   opts:[
+     {t:"先拖着，等对方来问再说",d:"sloth",w:2},
+     {t:"提前告知，一起想办法",d:"humility",w:2},
+     {t:"硬着头皮熬夜做完",d:"diligence",w:2},
+     {t:"怪自己当初不该答应",d:"wrath",w:1}]},
+  {tag:"评价",text:"有人在背后说你坏话，你知道了会？",
+   opts:[
+     {t:"当面问清楚，最恨背后捅刀",d:"wrath",w:1},
+     {t:"生气，但装作不知道",d:"envy",w:1},
+     {t:"反思自己是不是有做得不好的地方",d:"humility",w:2},
+     {t:"不做无谓纠缠，时间会证明",d:"patience",w:2}]},
+  {tag:"购物",text:"想买的东西贵出一倍，你会？",
+   opts:[
+     {t:"分期也要拿下，喜欢最重要",d:"greed",w:2},
+     {t:"等打折或攒够钱再买",d:"temperance",w:2},
+     {t:"买便宜的平替",d:"sloth",w:1},
+     {t:"借给朋友也愿意先帮他",d:"charity",w:1}]},
+  {tag:"初心",text:"回望过去一年，你最想对自己说？",
+   opts:[
+     {t:"又混了一年，明年再说",d:"sloth",w:2},
+     {t:"辛苦了，你已经很棒了",d:"kindness",w:2},
+     {t:"还不够，我还能更好",d:"pride",w:2},
+     {t:"慢慢来，比较快",d:"patience",w:2}]}
+];
+
+/* ================= 解读文案 ================= */
+const SIN_DESC = {
+  pride:"你对自己的能力与价值有强烈的确信，渴望被认可与仰望。适度是自信的基石，但当它变成「我必须赢过所有人」，你会难以听见他人的声音，也难以坦然承认失误。试着把「我要证明自己」换成「我想做好这件事」，傲慢就会变成担当。",
+  greed:"你对资源与机会有敏锐的嗅觉，总想抓住更多——更多钱、更多人脉、更多可能性。这股驱动力能成就野心，但若被它牵引，你会忽略已经拥有的，陷入「再多一点」的循环。定期清点你的拥有，贪婪就会变成进取。",
+  lust:"你对美与欲望坦诚，容易被强烈的情感与感官体验吸引。热情是你的燃料，但注意别让冲动替你做决定。把这份炽热导向真正值得的人与事，色欲就会变成生命力。",
+  envy:"你习惯拿自己与他人比较，他人的拥有会刺痛你。这份敏感其实说明你内心有清晰的渴望——嫉妒不是病，而是被压抑的野心。把它翻译成具体的行动目标，酸涩就会变成燃料。",
+  gluttony:"你容易在愉悦中失去边界，习惯用「更多」填补情绪的空洞——美食、娱乐、信息，什么都想过量。享受本身没有错，关键是找回「够了」的能力。试着每件事都留三分，暴食就会变成品味。",
+  wrath:"你的情绪能量强而直接，委屈与不公会在瞬间点燃你。愤怒是信号而非武器，它提醒你边界被侵犯了。学会在爆发前给自己三秒钟，暴怒就会变成捍卫的力量。",
+  sloth:"你擅长为「不做」找理由，拖延是你的舒适区。但懒惰往往不是懒，而是对失败的恐惧、对完美的苛求——动起来反而没那么可怕。从最小的一步开始，懒惰就会变成松弛。"
+};
+const VIRT_DESC = {
+  humility:"你把自己放得很低，愿意倾听、承认不足，从每一次反馈中学习。谦卑不是示弱，而是给成长留出空间——能低头的人，往往也站得最稳。",
+  charity:"你乐于分享时间、金钱与善意，给予本身让你快乐。你的慷慨正在悄悄改变身边的人，也为你积累了看不见的福报。",
+  chastity:"你尊重自己与他人的边界，情感与身体都保持清醒与克制，专注而忠诚。这种自律让你在诱惑面前依然从容。",
+  patience:"你懂得等待的价值，不急于求成，能在漫长的过程中保持稳定。时间站在你这边——你种下的每一分耐心，都会在未来的某个时刻开花。",
+  temperance:"你拥有「够了」的智慧，不追逐过量，情绪与欲望都在你的掌控之中。这份节制让你在喧嚣的世界里保持难得的清醒。",
+  diligence:"你用行动说话，愿意在看不见回报时持续投入。日拱一卒，功不唐捐——你的坚持，正在悄悄拉开与同龄人的距离。",
+  kindness:"你擅长看见他人的需要，温柔而坚定，你的存在让周围更安全。仁爱不是软弱，而是最高级的力量。"
+};
+
+/* ================= 状态 ================= */
+let cur = 0;
+let scores = {};      // 维度 -> 得分
+let maxScore = {};    // 维度 -> 可得分上限（用于百分比）
+
+function initDim(name){ if(scores[name] === undefined){ scores[name]=0; maxScore[name]=0; } }
+
+function startQuiz(){
+  cur = 0; scores = {}; maxScore = {};
+  QUESTIONS.forEach(q => q.opts.forEach(o => {
+    initDim(o.d); maxScore[o.d] += o.w;
+  }));
+  showScreen('screen-quiz');
+  renderQ();
+}
+
+function renderQ(){
+  const q = QUESTIONS[cur];
+  document.getElementById('qIndex').textContent = '第 ' + (cur+1) + ' 题';
+  document.getElementById('qTotal').textContent = '/ ' + QUESTIONS.length;
+  document.getElementById('progressFill').style.width = ((cur) / QUESTIONS.length * 100) + '%';
+  document.getElementById('qTag').textContent = 'SCENE · ' + q.tag;
+  document.getElementById('qText').textContent = q.text;
+  const box = document.getElementById('qOpts');
+  box.innerHTML = '';
+  q.opts.forEach((o,i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="mark"></span><span>' + o.t + '</span>';
+    b.onclick = () => {
+      Array.from(box.children).forEach(c => c.classList.remove('selected'));
+      b.classList.add('selected');
+      document.getElementById('btnNext').disabled = false;
+      selectedOpt = i;
+    };
+    box.appendChild(b);
+  });
+  document.getElementById('btnNext').disabled = true;
+  selectedOpt = -1;
+}
+let selectedOpt = -1;
+
+function nextQuestion(){
+  if (selectedOpt < 0) return;
+  const q = QUESTIONS[cur];
+  const o = q.opts[selectedOpt];
+  scores[o.d] += o.w;
+  cur++;
+  if (cur >= QUESTIONS.length) { finish(); }
+  else renderQ();
+}
+
+/* ================= 结果 ================= */
+function finish(){
+  // 罪 / 德 分组排行
+  const sinList = Object.keys(scores).filter(k => DIMS[k].side === 'sin')
+    .map(k => ({k, v:scores[k], pct: Math.round(scores[k]/maxScore[k]*100)}))
+    .sort((a,b) => b.pct - a.pct || b.v - a.v);
+  const virtList = Object.keys(scores).filter(k => DIMS[k].side === 'virt')
+    .map(k => ({k, v:scores[k], pct: Math.round(scores[k]/maxScore[k]*100)}))
+    .sort((a,b) => b.pct - a.pct || b.v - a.v);
+
+  const topSin = sinList[0], topVirt = virtList[0];
+  document.getElementById('rBadge').textContent = DIMS[topSin.k].icon;
+  document.getElementById('rSinName').textContent = DIMS[topSin.k].zh;
+  document.getElementById('rSinEn').textContent = DIMS[topSin.k].en;
+  document.getElementById('rSinPct').textContent = topSin.pct + '%';
+  document.getElementById('rSinDesc').textContent = SIN_DESC[topSin.k];
+  document.getElementById('rVirtName').textContent = DIMS[topVirt.k].zh;
+  document.getElementById('rVirtEn').textContent = DIMS[topVirt.k].en;
+  document.getElementById('rVirtDesc').textContent = VIRT_DESC[topVirt.k];
+
+  renderRank('sinRank', sinList, 'sin');
+  renderRank('virtRank', virtList, 'virt');
+  renderRadar();
+  renderSummary(topSin, topVirt);
+
+  // 滚动到顶部
+  window.scrollTo(0,0);
+  setTimeout(() => showScreen('screen-result'), 350);
+}
+
+function renderRank(id, list, side){
+  const box = document.getElementById(id);
+  box.innerHTML = '';
+  list.slice(0,7).forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'rank-item';
+    const c = DIMS[item.k].color;
+    row.innerHTML =
+      '<div class="rank-no">' + (i+1) + '</div>' +
+      '<div class="rank-name">' + DIMS[item.k].icon + ' ' + DIMS[item.k].zh + '</div>' +
+      '<div class="bar-wrap"><div class="bar-fill" style="background:' + c + ';width:0" data-w="' + item.pct + '"></div></div>' +
+      '<div class="rank-pct">' + item.pct + '%</div>';
+    box.appendChild(row);
+  });
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    box.querySelectorAll('.bar-fill').forEach(f => f.style.width = f.dataset.w + '%');
+  }));
+}
+
+function renderRadar(){
+  const keys = ['pride','greed','lust','envy','gluttony','wrath','sloth',
+                'humility','charity','chastity','patience','temperance','diligence','kindness'];
+  const N = keys.length;
+  const size = 460, cx = size/2, cy = size/2, R = 180;
+  let svg = '<svg viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg">';
+  // 网格
+  for (let ring = 1; ring <= 4; ring++){
+    let pts = [];
+    for (let i = 0; i < N; i++){
+      const a = -Math.PI/2 + i*2*Math.PI/N;
+      pts.push((cx + Math.cos(a)*R*ring/4).toFixed(1) + ',' + (cy + Math.sin(a)*R*ring/4).toFixed(1));
+    }
+    svg += '<polygon points="' + pts.join(' ') + '" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1"/>';
+  }
+  for (let i = 0; i < N; i++){
+    const a = -Math.PI/2 + i*2*Math.PI/N;
+    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx+Math.cos(a)*R) + '" y2="' + (cy+Math.sin(a)*R) + '" stroke="rgba(255,255,255,.07)" stroke-width="1"/>';
+  }
+  // 数据
+  let dataPts = [], dataPts2 = [];
+  keys.forEach(k => {
+    const a = -Math.PI/2 + keys.indexOf(k)*2*Math.PI/N;
+    const val = Math.max(0.05, scores[k] / maxScore[k]);
+    dataPts.push((cx + Math.cos(a)*R*val).toFixed(1) + ',' + (cy + Math.sin(a)*R*val).toFixed(1));
+    dataPts2.push((cx + Math.cos(a)*R*val*1.06).toFixed(1) + ',' + (cy + Math.sin(a)*R*val*1.06).toFixed(1));
+  });
+  svg += '<polygon points="' + dataPts.join(' ') + '" fill="rgba(201,169,97,.25)" stroke="#c9a961" stroke-width="2"/>';
+  svg += '<polygon points="' + dataPts2.join(' ') + '" fill="rgba(255,255,255,.05)" stroke="none"/>';
+  // 标签
+  keys.forEach(k => {
+    const a = -Math.PI/2 + keys.indexOf(k)*2*Math.PI/N;
+    const lx = cx + Math.cos(a)*(R+34), ly = cy + Math.sin(a)*(R+34);
+    const isSin = DIMS[k].side === 'sin';
+    svg += '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="' + (isSin ? '#c07a72' : '#6fb39a') + '">' + DIMS[k].zh + '</text>';
+  });
+  svg += '</svg>';
+  document.getElementById('radarBox').innerHTML = svg;
+}
+
+function renderSummary(topSin, topVirt){
+  const s = DIMS[topSin.k].zh, v = DIMS[topVirt.k].zh;
+  document.getElementById('rSummary').textContent =
+    '你是一座「' + s + '」与「' + v + '」共存的矛盾体——' +
+    '影子里的' + s + '是你未被驯服的能量，而光芒中的' + v + '是你最珍贵的底色。' +
+    '真正成熟的人不是消灭阴影，而是与它共处：让' + s + '成为你前行的燃料，让' + v + '成为你选择的罗盘。';
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function restart(){
+  showScreen('screen-cover');
+  window.scrollTo(0,0);
+}
+
+/* ================= 商品链接配置 =================
+   上线时把千帆商品链接填入 PRODUCT_URL（或 URL 加 ?product=xxx 覆盖） */
+const PRODUCT_URL = '';
+const urlProduct = new URLSearchParams(location.search).get('product');
+const BUY_URL = urlProduct || PRODUCT_URL || '';
+
+document.getElementById('btnBuy').onclick = function(){
+  if (BUY_URL) { location.href = BUY_URL; return; }
+  alert('完整报告购买通道即将上线，敬请期待 ✨');
+};
+</script>
+</body>
+</html>
