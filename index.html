@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>七宗罪 × 七美德 · 人格光影测试（公众号每日一测）</title>
-<meta name="description" content="公众号每日一道人性测试题，免费开测；46 道情境题测出你的七宗罪与七美德，付费 ¥8.88 解锁专属深度人格报告。">
+<meta name="description" content="公众号每日一道人性测试题，免费开测；46 道情境题测出你的七宗罪与七美德，生成专属人格光影报告。">
 <style>
   :root{
     --bg:#0e0b12;
@@ -108,20 +108,6 @@
 
   footer{margin-top:auto;padding-top:40px;text-align:center;font-size:12px;color:#6b5f4d}
   .hidden{display:none !important}
-
-  /* ---------- 付费弹窗 ---------- */
-  .modal-mask{position:fixed;inset:0;background:rgba(6,4,10,.82);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:24px}
-  .modal-mask.show{display:flex}
-  .modal{background:linear-gradient(160deg,#221a2e,#17121f);border:1px solid var(--line);border-radius:20px;max-width:400px;width:100%;padding:26px 22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-  .modal h3{font-size:18px;letter-spacing:2px;color:var(--gold2);margin-bottom:6px}
-  .modal .price{font-size:34px;font-weight:800;color:var(--gold);margin:10px 0 4px}
-  .modal .price small{font-size:14px;font-weight:400;color:var(--muted)}
-  .modal .qr-box{margin:16px auto;width:200px;height:200px;background:#fff;border-radius:14px;padding:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .modal .qr-box img{width:100%;height:100%;object-fit:contain;border-radius:6px}
-  .modal .steps{text-align:left;font-size:13.5px;color:var(--cream);line-height:2;margin:14px 0}
-  .modal .steps b{color:var(--gold2)}
-  .modal .close-btn{margin-top:14px;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:12px;padding:10px 0;width:100%;font-size:14px;cursor:pointer;font-family:inherit}
-  .modal .close-btn:hover{color:var(--gold);border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -145,8 +131,8 @@
     <h1 class="title">七宗罪 × 七美德</h1>
     <p class="sub">人格光影测试 · 46 道情境题 · 约 6 分钟 · 免费开测</p>
     <div class="cover-meta">
-      <span class="chip">✅ 测试免费</span>
-      <span class="chip">📊 报告 ¥8.88</span>
+      <span class="chip">✅ 免费开测</span>
+      <span class="chip">📊 14 维人格雷达</span>
       <span class="chip">📮 公众号每日一测</span>
     </div>
     <div class="actions">
@@ -233,9 +219,9 @@
     </div>
 
     <div class="report-cta">
-      <div class="tiny">上面是免费基础报告。想获得更深入的万字解读、行为建议与专属修炼路线？</div>
-      <button class="btn" id="btnBuy">解锁完整深度报告 · ¥8.88</button>
-      <div class="tiny" style="margin-top:8px">测试免费 · 报告 ¥8.88 · 付款后自动发送至微信</div>
+      <div class="tiny">想获得更深入的万字解读、行为建议与专属修炼路线？</div>
+      <button class="btn" id="btnBuy">下载完整报告 →</button>
+      <div class="tiny" style="margin-top:8px">完整报告为深度内容 · 下载前会告知费用</div>
     </div>
 
     <div class="actions">
@@ -244,21 +230,6 @@
     <footer>测试结果仅供自我探索与娱乐参考</footer>
   </section>
 
-</div>
-
-<!-- ============ 付费弹窗 ============ -->
-<div class="modal-mask" id="payModal" onclick="if(event.target===this)closePayModal()">
-  <div class="modal">
-    <h3>解锁完整深度报告</h3>
-    <div class="price">¥8.88 <small>/ 份</small></div>
-    <div class="qr-box"><img id="payQrImg" src="" alt="微信收款码"></div>
-    <div class="steps">
-      <b>1.</b> 长按识别上方收款码，支付 <b>¥8.88</b><br>
-      <b>2.</b> 将支付完成截图发送至公众号「<span id="payGzhName">每天一个测试</span>」<br>
-      <b>3.</b> 公众号自动发送你的专属深度报告 📄
-    </div>
-    <button class="close-btn" onclick="closePayModal()">稍后再说</button>
-  </div>
 </div>
 
 <script>
@@ -760,29 +731,16 @@ function restart(){
   window.scrollTo(0,0);
 }
 
-/* ================= 付费配置（公众号模式） =================
-   测试免费；解锁完整报告 ¥8.88。
-   1. PAY_QR_URL  ：微信收款码图片地址（必填，付款弹窗里展示）
-   2. GZH_NAME    ：公众号名称（付款步骤里提示用）
-   也可用 URL 参数覆盖：?pay=收款码地址&gzh=公众号名 */
-const PAY_QR_URL = 'notes/img/skm-square.png';
-const GZH_NAME = '每天一个测试';
+/* ================= 下载报告跳转（支付页） =================
+   测试全程免费；点击「下载完整报告」跳转到 pay.html，
+   费用（¥8.88）只在支付页告知。
+   gzh 参数透传给支付页（公众号名称提示用） */
 const params = new URLSearchParams(location.search);
-const payQr = params.get('pay') || PAY_QR_URL;
-const gzhName = params.get('gzh') || GZH_NAME;
+const gzhName = params.get('gzh') || '每天一个测试';
 
-document.getElementById('payGzhName').textContent = gzhName;
-
-function openPayModal(){
-  if (!payQr) { alert('收款码配置中，请先关注公众号「' + gzhName + '」获取报告 ✨'); return; }
-  document.getElementById('payQrImg').src = payQr;
-  document.getElementById('payModal').classList.add('show');
-}
-function closePayModal(){
-  document.getElementById('payModal').classList.remove('show');
-}
-
-document.getElementById('btnBuy').onclick = openPayModal;
+document.getElementById('btnBuy').onclick = function(){
+  location.href = 'pay.html?gzh=' + encodeURIComponent(gzhName);
+};
 </script>
 </body>
 </html>

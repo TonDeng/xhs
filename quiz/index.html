@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>七宗罪 × 七美德 · 人格光影测试</title>
-<meta name="description" content="21 道情境题，测出你内心深处的七宗罪与七美德，生成专属人格光影报告。">
+<title>七宗罪 × 七美德 · 人格光影测试（公众号每日一测）</title>
+<meta name="description" content="公众号每日一道人性测试题，免费开测；46 道情境题测出你的七宗罪与七美德，付费 ¥8.88 解锁专属深度人格报告。">
 <style>
   :root{
     --bg:#0e0b12;
@@ -108,6 +108,20 @@
 
   footer{margin-top:auto;padding-top:40px;text-align:center;font-size:12px;color:#6b5f4d}
   .hidden{display:none !important}
+
+  /* ---------- 付费弹窗 ---------- */
+  .modal-mask{position:fixed;inset:0;background:rgba(6,4,10,.82);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-mask.show{display:flex}
+  .modal{background:linear-gradient(160deg,#221a2e,#17121f);border:1px solid var(--line);border-radius:20px;max-width:400px;width:100%;padding:26px 22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .modal h3{font-size:18px;letter-spacing:2px;color:var(--gold2);margin-bottom:6px}
+  .modal .price{font-size:34px;font-weight:800;color:var(--gold);margin:10px 0 4px}
+  .modal .price small{font-size:14px;font-weight:400;color:var(--muted)}
+  .modal .qr-box{margin:16px auto;width:200px;height:200px;background:#fff;border-radius:14px;padding:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .modal .qr-box img{width:100%;height:100%;object-fit:contain;border-radius:6px}
+  .modal .steps{text-align:left;font-size:13.5px;color:var(--cream);line-height:2;margin:14px 0}
+  .modal .steps b{color:var(--gold2)}
+  .modal .close-btn{margin-top:14px;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:12px;padding:10px 0;width:100%;font-size:14px;cursor:pointer;font-family:inherit}
+  .modal .close-btn:hover{color:var(--gold);border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -129,12 +143,11 @@
       </svg>
     </div>
     <h1 class="title">七宗罪 × 七美德</h1>
-    <p class="sub">人格光影测试 · 21 道情境题 · 约 3 分钟</p>
+    <p class="sub">人格光影测试 · 46 道情境题 · 约 6 分钟 · 免费开测</p>
     <div class="cover-meta">
-      <span class="chip">傲慢 · 贪婪 · 色欲</span>
-      <span class="chip">嫉妒 · 暴食 · 暴怒 · 懒惰</span>
-      <span class="chip">谦卑 · 慷慨 · 贞洁</span>
-      <span class="chip">耐心 · 节制 · 勤奋 · 仁爱</span>
+      <span class="chip">✅ 测试免费</span>
+      <span class="chip">📊 报告 ¥8.88</span>
+      <span class="chip">📮 公众号每日一测</span>
     </div>
     <div class="actions">
       <button class="btn" onclick="startQuiz()">开始测试</button>
@@ -158,7 +171,7 @@
     </div>
     <div class="panel">
       <h3>怎么玩</h3>
-      <p>共 21 道情境题，请凭第一直觉选择最贴近你的选项。完成后你将获得：① 你的「主罪」与「主德」；② 14 维人格雷达图；③ 专属性格解读。</p>
+      <p>共 46 道情境题，请凭第一直觉选择最贴近你的选项。完成后你将获得：① 你的「主罪」与「主德」；② 14 维人格雷达图；③ 专属性格解读。</p>
     </div>
     <div class="actions">
       <button class="btn" onclick="startQuiz()">开始测试</button>
@@ -169,7 +182,7 @@
   <!-- ============ 答题 ============ -->
   <section class="screen" id="screen-quiz">
     <div class="progress-wrap">
-      <div class="progress-top"><span id="qIndex">第 1 题</span><span id="qTotal">/ 21</span></div>
+      <div class="progress-top"><span id="qIndex">第 1 题</span><span id="qTotal">/ 46</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
     <div class="q-num" id="qTag">QUESTION</div>
@@ -220,9 +233,9 @@
     </div>
 
     <div class="report-cta">
-      <div class="tiny">想获得更深入的万字解读、行为建议与专属修炼路线？</div>
-      <button class="btn" id="btnBuy">获取完整报告 →</button>
-      <div class="tiny" style="margin-top:8px">完整报告为付费内容 · 支付后自动发送</div>
+      <div class="tiny">上面是免费基础报告。想获得更深入的万字解读、行为建议与专属修炼路线？</div>
+      <button class="btn" id="btnBuy">解锁完整深度报告 · ¥8.88</button>
+      <div class="tiny" style="margin-top:8px">测试免费 · 报告 ¥8.88 · 付款后自动发送至微信</div>
     </div>
 
     <div class="actions">
@@ -231,6 +244,21 @@
     <footer>测试结果仅供自我探索与娱乐参考</footer>
   </section>
 
+</div>
+
+<!-- ============ 付费弹窗 ============ -->
+<div class="modal-mask" id="payModal" onclick="if(event.target===this)closePayModal()">
+  <div class="modal">
+    <h3>解锁完整深度报告</h3>
+    <div class="price">¥8.88 <small>/ 份</small></div>
+    <div class="qr-box"><img id="payQrImg" src="" alt="微信收款码"></div>
+    <div class="steps">
+      <b>1.</b> 长按识别上方收款码，支付 <b>¥8.88</b><br>
+      <b>2.</b> 将支付完成截图发送至公众号「<span id="payGzhName">每天一个测试</span>」<br>
+      <b>3.</b> 公众号自动发送你的专属深度报告 📄
+    </div>
+    <button class="close-btn" onclick="closePayModal()">稍后再说</button>
+  </div>
 </div>
 
 <script>
@@ -379,7 +407,157 @@ const QUESTIONS = [
      {t:"又混了一年，明年再说",d:"sloth",w:2},
      {t:"辛苦了，你已经很棒了",d:"kindness",w:2},
      {t:"还不够，我还能更好",d:"pride",w:2},
-     {t:"慢慢来，比较快",d:"patience",w:2}]}
+     {t:"慢慢来，比较快",d:"patience",w:2}]},
+  {tag:"家庭",text:"妈妈总爱唠叨你的生活起居，你会？",
+   opts:[
+     {t:"不耐烦地打断她，我都这么大了",d:"wrath",w:2},
+     {t:"听着，但左耳进右耳出",d:"sloth",w:1},
+     {t:"认真回应她关心的每件事",d:"patience",w:2},
+     {t:"主动多打电话报平安，让她放心",d:"kindness",w:2}]},
+  {tag:"健康",text:"体检报告显示亚健康，医生建议早睡，你会？",
+   opts:[
+     {t:"先熬完这阵子再说",d:"sloth",w:2},
+     {t:"立刻调整作息，开始运动",d:"diligence",w:2},
+     {t:"买一堆保健品求个心安",d:"greed",w:1},
+     {t:"我身体我自己清楚，不用管",d:"pride",w:1}]},
+  {tag:"恋爱",text:"对象问起你的前任，你会？",
+   opts:[
+     {t:"如实说，包括自己的错误",d:"humility",w:2},
+     {t:"美化自己，略过不光彩的",d:"pride",w:2},
+     {t:"反问ta打岔过去",d:"sloth",w:1},
+     {t:"吃醋反问ta是不是还想着前任",d:"envy",w:1}]},
+  {tag:"朋友",text:"朋友深夜打电话诉苦，你困得不行，会？",
+   opts:[
+     {t:"强打精神听ta说完",d:"kindness",w:2},
+     {t:"敷衍几句说改天再聊",d:"sloth",w:2},
+     {t:"打断ta说事情没那么严重",d:"wrath",w:1},
+     {t:"陪ta一起分析问题出在哪",d:"diligence",w:2}]},
+  {tag:"消费",text:"直播间限时抢购，只剩最后几件，你会？",
+   opts:[
+     {t:"立刻下单，怕错过就没了",d:"greed",w:2},
+     {t:"关掉直播，需求大于欲望",d:"temperance",w:2},
+     {t:"纠结到最后还是买了",d:"sloth",w:1},
+     {t:"给朋友也抢一件",d:"charity",w:1}]},
+  {tag:"网络",text:"网上有人和你意见不合开始抬杠，你会？",
+   opts:[
+     {t:"逐条反驳，怼到对方闭嘴",d:"wrath",w:2},
+     {t:"拉黑，眼不见为净",d:"sloth",w:1},
+     {t:"想想自己是不是也有偏见",d:"humility",w:2},
+     {t:"心平气和解释自己的立场",d:"patience",w:2}]},
+  {tag:"职场",text:"老板在会议上否定了你的方案，你会？",
+   opts:[
+     {t:"当场反驳，坚持自己是对的",d:"pride",w:2},
+     {t:"记下意见，回去再改一版",d:"humility",w:2},
+     {t:"心里不服，但嘴上说好",d:"envy",w:1},
+     {t:"觉得老板不懂，懒得改",d:"sloth",w:1}]},
+  {tag:"生活",text:"看到别人身材好、能力强，你会？",
+   opts:[
+     {t:"心里发酸，怎么我就做不到",d:"envy",w:2},
+     {t:"默默收藏ta的方法开始练",d:"diligence",w:2},
+     {t:"觉得ta肯定有先天优势",d:"pride",w:1},
+     {t:"真诚夸赞，并虚心请教",d:"kindness",w:2}]},
+  {tag:"深夜",text:"睡前一小时，你通常在做什么？",
+   opts:[
+     {t:"刷短视频，根本停不下来",d:"gluttony",w:2},
+     {t:"复盘今天的待办，列明天的计划",d:"diligence",w:2},
+     {t:"想心事，越想越精神",d:"envy",w:1},
+     {t:"看会儿书，困了就睡",d:"temperance",w:2}]},
+  {tag:"恋爱",text:"伴侣回消息很慢，你会？",
+   opts:[
+     {t:"想立刻见到ta，发语音撒娇",d:"lust",w:2},
+     {t:"疑心ta是不是不在乎我了",d:"envy",w:2},
+     {t:"相信ta忙完会回，先忙自己的",d:"patience",w:2},
+     {t:"连环追问，在干嘛在干嘛",d:"wrath",w:1}]},
+  {tag:"金钱",text:"彩票中了 10 万，你的第一反应是？",
+   opts:[
+     {t:"立刻盘算怎么投资翻倍",d:"greed",w:2},
+     {t:"存起来，留着应急",d:"temperance",w:2},
+     {t:"请大家吃饭庆祝",d:"charity",w:2},
+     {t:"先核实真假，别是诈骗",d:"humility",w:1}]},
+  {tag:"原则",text:"朋友求你帮忙走个后门（违规但不严重），你会？",
+   opts:[
+     {t:"直接拒绝，原则问题不能破",d:"chastity",w:2},
+     {t:"碍于情面勉强答应",d:"sloth",w:1},
+     {t:"趁机让ta欠我个人情",d:"pride",w:1},
+     {t:"帮ta，但提醒下不为例",d:"patience",w:2}]},
+  {tag:"社交",text:"聚会时大家都在低头玩手机，你会？",
+   opts:[
+     {t:"放下手机，主动找话题",d:"kindness",w:2},
+     {t:"觉得无聊，想早点走",d:"sloth",w:1},
+     {t:"埋头刷自己的手机",d:"gluttony",w:1},
+     {t:"先观察大家，找插话的时机",d:"humility",w:1}]},
+  {tag:"职场",text:"同事升职了，能力你觉得不如你，你会？",
+   opts:[
+     {t:"心里不服，觉得不公平",d:"envy",w:2},
+     {t:"恭喜ta，请教ta哪里做得好",d:"humility",w:2},
+     {t:"觉得领导眼光不行，想跳槽",d:"wrath",w:1},
+     {t:"暗自努力，下次机会抓住",d:"diligence",w:2}]},
+  {tag:"健康",text:"朋友劝你少熬夜，你会？",
+   opts:[
+     {t:"回一句「我身体好着呢」",d:"pride",w:2},
+     {t:"承认熬夜不好，但改不了",d:"sloth",w:1},
+     {t:"谢谢关心，尽量调整",d:"patience",w:2},
+     {t:"拉ta一起打卡早睡",d:"diligence",w:1}]},
+  {tag:"恋爱",text:"你发现伴侣在手机上和异性聊得火热，你会？",
+   opts:[
+     {t:"直接质问，必须说清楚",d:"wrath",w:2},
+     {t:"默默观察，等更多证据",d:"patience",w:1},
+     {t:"觉得自己魅力不够才这样",d:"envy",w:2},
+     {t:"坦诚沟通边界，说出感受",d:"humility",w:2}]},
+  {tag:"消费",text:"看到喜欢的博主带货，你会？",
+   opts:[
+     {t:"无脑下单同款",d:"greed",w:2},
+     {t:"先看评价再决定",d:"temperance",w:2},
+     {t:"觉得都是智商税",d:"pride",w:1},
+     {t:"给家人也买一份",d:"charity",w:1}]},
+  {tag:"家庭",text:"父母年纪大了想学智能手机，你会？",
+   opts:[
+     {t:"嫌麻烦，让他们自己摸索",d:"sloth",w:2},
+     {t:"耐心地一步步教",d:"patience",w:2},
+     {t:"给ta们买台好用的老人机",d:"charity",w:1},
+     {t:"教一遍不会就有点烦",d:"wrath",w:1}]},
+  {tag:"深夜",text:"睡不着时，你脑海里反复想的是？",
+   opts:[
+     {t:"白天哪句话说错了",d:"envy",w:1},
+     {t:"明天要做的事",d:"diligence",w:2},
+     {t:"曾经错过的机会",d:"greed",w:1},
+     {t:"什么都不想，专注呼吸",d:"temperance",w:2}]},
+  {tag:"朋友",text:"朋友在背后说你坏话被你知道了，你会？",
+   opts:[
+     {t:"当面对质，绝交拉倒",d:"wrath",w:2},
+     {t:"反思自己是不是真的有问题",d:"humility",w:2},
+     {t:"心里记一笔，以后少来往",d:"envy",w:1},
+     {t:"直接疏远，不解释",d:"sloth",w:1}]},
+  {tag:"职场",text:"团队任务你多做了一倍，领导却没看见，你会？",
+   opts:[
+     {t:"主动汇报，争取认可",d:"diligence",w:2},
+     {t:"觉得不公平，凭什么我干",d:"wrath",w:1},
+     {t:"默默做完，不问回报",d:"patience",w:2},
+     {t:"下次也学着偷懒",d:"sloth",w:1}]},
+  {tag:"生活",text:"看到有人对服务员态度恶劣，你会？",
+   opts:[
+     {t:"上前制止，太欺负人了",d:"wrath",w:2},
+     {t:"私下安慰服务员",d:"kindness",w:2},
+     {t:"多一事不如少一事",d:"sloth",w:1},
+     {t:"想想那人是不是心情不好",d:"humility",w:1}]},
+  {tag:"恋爱",text:"热恋期过去后，你觉得？",
+   opts:[
+     {t:"平淡才是真，细水长流",d:"patience",w:1},
+     {t:"开始怀念当初的激情",d:"lust",w:2},
+     {t:"主动制造小惊喜维持热度",d:"diligence",w:2},
+     {t:"认定ta了，开始规划未来",d:"chastity",w:2}]},
+  {tag:"网络",text:"你的社交账号有粉丝夸你，你会？",
+   opts:[
+     {t:"享受被关注的感觉",d:"pride",w:2},
+     {t:"谦虚回应，谢谢支持",d:"humility",w:2},
+     {t:"觉得他们只是客套",d:"envy",w:1},
+     {t:"认真回复每一条评论",d:"kindness",w:2}]},
+  {tag:"夜晚",text:"周五晚上，你通常会？",
+   opts:[
+     {t:"出去和朋友玩到尽兴",d:"gluttony",w:1},
+     {t:"在家舒服地宅着",d:"sloth",w:1},
+     {t:"学习充电，提升自己",d:"diligence",w:2},
+     {t:"陪家人度过",d:"kindness",w:2}]}
 ];
 
 /* ================= 解读文案 ================= */
@@ -465,19 +643,38 @@ function finish(){
     .sort((a,b) => b.pct - a.pct || b.v - a.v);
 
   const topSin = sinList[0], topVirt = virtList[0];
-  document.getElementById('rBadge').textContent = DIMS[topSin.k].icon;
-  document.getElementById('rSinName').textContent = DIMS[topSin.k].zh;
-  document.getElementById('rSinEn').textContent = DIMS[topSin.k].en;
-  document.getElementById('rSinPct').textContent = topSin.pct + '%';
-  document.getElementById('rSinDesc').textContent = SIN_DESC[topSin.k];
-  document.getElementById('rVirtName').textContent = DIMS[topVirt.k].zh;
-  document.getElementById('rVirtEn').textContent = DIMS[topVirt.k].en;
-  document.getElementById('rVirtDesc').textContent = VIRT_DESC[topVirt.k];
+  // 边界：罪/德侧得分全为 0 时，不硬选一个 0% 的主罪/主德
+  const noSin = topSin.pct <= 0;
+  const noVirt = topVirt.pct <= 0;
+
+  if (noSin) {
+    document.getElementById('rBadge').textContent = '⚖️';
+    document.getElementById('rSinName').textContent = '无明显主罪';
+    document.getElementById('rSinEn').textContent = 'Balanced';
+    document.getElementById('rSinPct').textContent = '0%';
+    document.getElementById('rSinDesc').textContent = '你的作答几乎没有触及七宗罪的暗面——这并非没有阴影，而是你更习惯用理性、善意与自省面对生活。与其说是「无罪」，不如说你把能量都导向了光芒面。';
+  } else {
+    document.getElementById('rBadge').textContent = DIMS[topSin.k].icon;
+    document.getElementById('rSinName').textContent = DIMS[topSin.k].zh;
+    document.getElementById('rSinEn').textContent = DIMS[topSin.k].en;
+    document.getElementById('rSinPct').textContent = topSin.pct + '%';
+    document.getElementById('rSinDesc').textContent = SIN_DESC[topSin.k];
+  }
+
+  if (noVirt) {
+    document.getElementById('rVirtName').textContent = '无明显主德';
+    document.getElementById('rVirtEn').textContent = 'Balanced';
+    document.getElementById('rVirtDesc').textContent = '这次作答里你没有特别突出的美德倾向——试试换一种真实的状态再测一次，让光芒面浮出水面。';
+  } else {
+    document.getElementById('rVirtName').textContent = DIMS[topVirt.k].zh;
+    document.getElementById('rVirtEn').textContent = DIMS[topVirt.k].en;
+    document.getElementById('rVirtDesc').textContent = VIRT_DESC[topVirt.k];
+  }
 
   renderRank('sinRank', sinList, 'sin');
   renderRank('virtRank', virtList, 'virt');
   renderRadar();
-  renderSummary(topSin, topVirt);
+  renderSummary(topSin, topVirt, noSin, noVirt);
 
   // 滚动到顶部
   window.scrollTo(0,0);
@@ -543,8 +740,10 @@ function renderRadar(){
   document.getElementById('radarBox').innerHTML = svg;
 }
 
-function renderSummary(topSin, topVirt){
-  const s = DIMS[topSin.k].zh, v = DIMS[topVirt.k].zh;
+function renderSummary(topSin, topVirt, noSin, noVirt){
+  let s, v;
+  if (noSin) s = '克制'; else s = DIMS[topSin.k].zh;
+  if (noVirt) v = '自省'; else v = DIMS[topVirt.k].zh;
   document.getElementById('rSummary').textContent =
     '你是一座「' + s + '」与「' + v + '」共存的矛盾体——' +
     '影子里的' + s + '是你未被驯服的能量，而光芒中的' + v + '是你最珍贵的底色。' +
@@ -561,16 +760,29 @@ function restart(){
   window.scrollTo(0,0);
 }
 
-/* ================= 商品链接配置 =================
-   上线时把千帆商品链接填入 PRODUCT_URL（或 URL 加 ?product=xxx 覆盖） */
-const PRODUCT_URL = '';
-const urlProduct = new URLSearchParams(location.search).get('product');
-const BUY_URL = urlProduct || PRODUCT_URL || '';
+/* ================= 付费配置（公众号模式） =================
+   测试免费；解锁完整报告 ¥8.88。
+   1. PAY_QR_URL  ：微信收款码图片地址（必填，付款弹窗里展示）
+   2. GZH_NAME    ：公众号名称（付款步骤里提示用）
+   也可用 URL 参数覆盖：?pay=收款码地址&gzh=公众号名 */
+const PAY_QR_URL = 'notes/img/skm-square.png';
+const GZH_NAME = '每天一个测试';
+const params = new URLSearchParams(location.search);
+const payQr = params.get('pay') || PAY_QR_URL;
+const gzhName = params.get('gzh') || GZH_NAME;
 
-document.getElementById('btnBuy').onclick = function(){
-  if (BUY_URL) { location.href = BUY_URL; return; }
-  alert('完整报告购买通道即将上线，敬请期待 ✨');
-};
+document.getElementById('payGzhName').textContent = gzhName;
+
+function openPayModal(){
+  if (!payQr) { alert('收款码配置中，请先关注公众号「' + gzhName + '」获取报告 ✨'); return; }
+  document.getElementById('payQrImg').src = payQr;
+  document.getElementById('payModal').classList.add('show');
+}
+function closePayModal(){
+  document.getElementById('payModal').classList.remove('show');
+}
+
+document.getElementById('btnBuy').onclick = openPayModal;
 </script>
 </body>
 </html>
