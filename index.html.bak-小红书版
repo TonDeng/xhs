@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>七宗罪 × 七美德 · 人格光影测试（公众号每日一测）</title>
-<meta name="description" content="公众号每日一道人性测试题，免费开测；46 道情境题测出你的七宗罪与七美德，生成专属人格光影报告。">
+<title>七宗罪 × 七美德 · 人格光影测试</title>
+<meta name="description" content="46 道情境题，测出你内心深处的七宗罪与七美德，生成专属人格光影报告。">
 <style>
   :root{
     --bg:#0e0b12;
@@ -129,11 +129,12 @@
       </svg>
     </div>
     <h1 class="title">七宗罪 × 七美德</h1>
-    <p class="sub">人格光影测试 · 46 道情境题 · 约 6 分钟 · 免费开测</p>
+    <p class="sub">人格光影测试 · 46 道情境题 · 约 6 分钟</p>
     <div class="cover-meta">
-      <span class="chip">✅ 免费开测</span>
-      <span class="chip">📊 14 维人格雷达</span>
-      <span class="chip">📮 公众号每日一测</span>
+      <span class="chip">傲慢 · 贪婪 · 色欲</span>
+      <span class="chip">嫉妒 · 暴食 · 暴怒 · 懒惰</span>
+      <span class="chip">谦卑 · 慷慨 · 贞洁</span>
+      <span class="chip">耐心 · 节制 · 勤奋 · 仁爱</span>
     </div>
     <div class="actions">
       <button class="btn" onclick="startQuiz()">开始测试</button>
@@ -168,7 +169,7 @@
   <!-- ============ 答题 ============ -->
   <section class="screen" id="screen-quiz">
     <div class="progress-wrap">
-      <div class="progress-top"><span id="qIndex">第 1 题</span><span id="qTotal">/ 46</span></div>
+      <div class="progress-top"><span id="qIndex">第 1 题</span><span id="qTotal">/ 21</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
     <div class="q-num" id="qTag">QUESTION</div>
@@ -219,8 +220,9 @@
     </div>
 
     <div class="report-cta">
-      <div class="tiny">以上就是你的完整专属报告，完全免费。</div>
-      <div class="tiny" style="margin-top:6px">长按保存报告页，或分享给朋友一起测 🔗</div>
+      <div class="tiny">想获得更深入的万字解读、行为建议与专属修炼路线？</div>
+      <button class="btn" id="btnBuy">获取完整报告 →</button>
+      <div class="tiny" style="margin-top:8px">完整报告为付费内容 · 支付后自动发送</div>
     </div>
 
     <div class="actions">
@@ -730,7 +732,17 @@ function restart(){
   window.scrollTo(0,0);
 }
 
-/* 测试与报告完全免费，无需付费跳转 */
+/* ================= 商品链接配置 =================
+   上线时把千帆商品链接填入 PRODUCT_URL（或 URL 加 ?product=xxx 覆盖）
+   例：https://tondeng.github.io/xhs/?product=https://ark.xiaohongshu.com/... */
+const PRODUCT_URL = '';
+const urlProduct = new URLSearchParams(location.search).get('product');
+const BUY_URL = urlProduct || PRODUCT_URL || '';
+
+document.getElementById('btnBuy').onclick = function(){
+  if (BUY_URL) { location.href = BUY_URL; return; }
+  alert('完整报告购买通道即将上线，敬请期待 ✨');
+};
 </script>
 </body>
 </html>

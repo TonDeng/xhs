@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>七宗罪×七美德 笔记配图</title>
+<style>
+  :root{
+    --bg:#0e0b12;
+    --card:#1d1728;
+    --gold:#c9a961;
+    --gold2:#e8cf9a;
+    --cream:#f2e9d8;
+    --muted:#a89a82;
+    --line:rgba(201,169,97,.3);
+    --sin:#b3544a;
+    --virt:#4a8f7a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#111;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Serif SC",serif}
+  .stage{width:1080px;height:1440px;margin:40px auto;position:relative;overflow:hidden;background:var(--bg);color:var(--cream)}
+  .stage.hidden{display:none}
+  .bg-radial{position:absolute;inset:0;background:
+    radial-gradient(900px 500px at 50% -5%, #241b33 0%, transparent 60%),
+    radial-gradient(700px 420px at 100% 110%, #1a1226 0%, transparent 55%)}
+  .vignette{position:absolute;inset:0;box-shadow:inset 0 0 200px rgba(0,0,0,.55)}
+
+  /* 装饰 */
+  .frame{position:absolute;inset:34px;border:1px solid var(--line);border-radius:24px;pointer-events:none}
+  .corner{position:absolute;width:54px;height:54px;border:3px solid var(--gold);opacity:.85}
+  .corner.tl{top:24px;left:24px;border-right:none;border-bottom:none;border-radius:16px 0 0 0}
+  .corner.tr{top:24px;right:24px;border-left:none;border-bottom:none;border-radius:0 16px 0 0}
+  .corner.bl{bottom:24px;left:24px;border-right:none;border-top:none;border-radius:0 0 0 16px}
+  .corner.br{bottom:24px;right:24px;border-left:none;border-top:none;border-radius:0 0 16px 0}
+  .kicker{font-size:34px;letter-spacing:18px;color:var(--gold);text-align:center;margin-top:120px;text-transform:uppercase}
+  .title-grad{background:linear-gradient(180deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .orn-star{width:140px;margin:0 auto;color:var(--gold)}
+  .divider{width:180px;height:2px;margin:40px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+  /* 通用内容排版 */
+  .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:80px 90px;text-align:center}
+  .h1{font-size:96px;font-weight:800;letter-spacing:8px;line-height:1.25}
+  .h2{font-size:64px;font-weight:800;letter-spacing:6px;line-height:1.3}
+  .h3{font-size:44px;font-weight:700;letter-spacing:4px}
+  .body{font-size:36px;line-height:1.9;color:var(--cream)}
+  .muted{font-size:30px;color:var(--muted);line-height:1.8}
+  .gold{color:var(--gold)}
+  .sin-c{color:var(--sin)}
+  .virt-c{color:var(--virt)}
+
+  /* 卡片网格 */
+  .grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;margin-top:70px}
+  .tile{width:250px;height:250px;border:1px solid var(--line);border-radius:22px;background:var(--card);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+  .tile .icon{font-size:72px}
+  .tile .name{font-size:36px;font-weight:700}
+  .tile .en{font-size:22px;color:var(--muted);letter-spacing:1px}
+
+  .step{display:flex;align-items:center;gap:34px;width:100%;max-width:860px;margin-top:44px}
+  .step-num{width:110px;height:110px;border-radius:50%;border:3px solid var(--gold);color:var(--gold);
+    font-size:52px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .step-txt{text-align:left}
+  .step-txt b{font-size:40px;display:block;margin-bottom:6px}
+  .step-txt span{font-size:30px;color:var(--muted)}
+
+  /* 报告示例 */
+  .report-mock{width:820px;border:1px solid var(--line);border-radius:26px;background:var(--card);padding:54px;margin-top:60px;text-align:left}
+  .rm-badge{width:130px;height:130px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:64px;margin:0 auto;background:radial-gradient(circle at 35% 30%,#2b2138,#17121f)}
+  .rm-main{text-align:center;margin-top:22px}
+  .rm-main b{font-size:54px;letter-spacing:4px}
+  .rm-main span{display:block;font-size:26px;color:var(--muted);margin-top:4px}
+  .rm-bar{display:flex;align-items:center;gap:16px;margin-top:30px}
+  .rm-bar .lb{width:120px;font-size:28px;text-align:right}
+  .rm-bar .track{flex:1;height:20px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .rm-bar .fill{height:100%;border-radius:99px}
+  .rm-pct{font-size:26px;color:var(--gold);width:70px;text-align:right}
+  .cta-pill{margin-top:64px;display:inline-block;padding:26px 70px;border-radius:99px;
+    background:linear-gradient(135deg,var(--gold),#a8843f);color:#17120a;font-size:40px;font-weight:800;letter-spacing:6px}
+  .price-line{margin-top:26px;font-size:34px}
+  .price-line b{font-size:52px;color:var(--gold2);letter-spacing:2px}
+  .footnote{position:absolute;bottom:44px;left:0;right:0;text-align:center;font-size:24px;color:#6b5f4d;letter-spacing:2px}
+  .brand{position:absolute;top:52px;left:0;right:0;text-align:center;font-size:26px;color:var(--gold);letter-spacing:10px}
+</style>
+</head>
+<body>
+
+<!-- ============ 1 封面 ============ -->
+<div class="stage" id="s0">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="brand">PERSONALITY · LIGHT &amp; SHADOW</div>
+  <div class="center">
+    <div style="font-size:60px;letter-spacing:14px;color:var(--gold);margin-top:60px">✦</div>
+    <div style="font-size:40px;letter-spacing:12px;color:var(--muted);margin-top:60px">21 道题 · 3 分钟</div>
+    <div class="h1 title-grad" style="margin-top:40px">七宗罪<br>×<br>七美德</div>
+    <div class="divider"></div>
+    <div class="h3" style="color:var(--cream)">测出你内心的 <span class="sin-c">主罪</span> 与 <span class="virt-c">主德</span></div>
+    <div class="muted" style="margin-top:50px">傲慢 · 贪婪 · 色欲 · 嫉妒 · 暴食 · 暴怒 · 懒惰<br>谦卑 · 慷慨 · 贞洁 · 耐心 · 节制 · 勤奋 · 仁爱</div>
+    <div class="cta-pill" style="margin-top:80px">立即测试 →</div>
+  </div>
+  <div class="footnote">做完即出 14 维人格雷达报告</div>
+</div>
+
+<!-- ============ 2 什么是七宗罪七美德 ============ -->
+<div class="stage hidden" id="s1">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:110px">What Is It</div>
+    <div class="h2 title-grad" style="margin-top:30px">什么是<br>七宗罪 × 七美德</div>
+    <div class="divider"></div>
+    <div class="body" style="text-align:left;max-width:860px">
+      <p style="margin-top:10px">源自中世纪神学的经典人性模型：</p>
+      <p style="margin-top:30px"><span class="sin-c"><b>七宗罪</b></span> —— 每个人内心深处未被驯服的原始欲望：傲慢、贪婪、色欲、嫉妒、暴食、暴怒、懒惰。</p>
+      <p style="margin-top:30px"><span class="virt-c"><b>七美德</b></span> —— 与之相对的人性光辉：谦卑、慷慨、贞洁、耐心、节制、勤奋、仁爱。</p>
+    </div>
+    <div class="muted" style="margin-top:60px">它不是审判，而是一面镜子 ——<br>看清自己，才能接纳自己。</div>
+  </div>
+  <div class="footnote">七宗罪 × 七美德 · 人格光影测试</div>
+</div>
+
+<!-- ============ 3 七宗罪 ============ -->
+<div class="stage hidden" id="s2">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:100px">The Seven Sins</div>
+    <div class="h2 title-grad" style="margin-top:30px">七宗罪 · 你的阴影面</div>
+    <div class="divider"></div>
+    <div class="grid" style="margin-top:60px">
+      <div class="tile"><div class="icon">👑</div><div class="name">傲慢</div><div class="en">Pride</div></div>
+      <div class="tile"><div class="icon">💰</div><div class="name">贪婪</div><div class="en">Greed</div></div>
+      <div class="tile"><div class="icon">🔥</div><div class="name">色欲</div><div class="en">Lust</div></div>
+      <div class="tile"><div class="icon">🍋</div><div class="name">嫉妒</div><div class="en">Envy</div></div>
+      <div class="tile"><div class="icon">🍽️</div><div class="name">暴食</div><div class="en">Gluttony</div></div>
+      <div class="tile"><div class="icon">😡</div><div class="name">暴怒</div><div class="en">Wrath</div></div>
+      <div class="tile"><div class="icon">🛋️</div><div class="name">懒惰</div><div class="en">Sloth</div></div>
+    </div>
+    <div class="muted" style="margin-top:70px">测试将告诉你：哪一宗罪藏得最深</div>
+  </div>
+  <div class="footnote">七宗罪 × 七美德 · 人格光影测试</div>
+</div>
+
+<!-- ============ 4 七美德 ============ -->
+<div class="stage hidden" id="s3">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:100px">The Seven Virtues</div>
+    <div class="h2 title-grad" style="margin-top:30px">七美德 · 你的光芒面</div>
+    <div class="divider"></div>
+    <div class="grid" style="margin-top:60px">
+      <div class="tile"><div class="icon">🕊️</div><div class="name">谦卑</div><div class="en">Humility</div></div>
+      <div class="tile"><div class="icon">🎁</div><div class="name">慷慨</div><div class="en">Charity</div></div>
+      <div class="tile"><div class="icon">🌙</div><div class="name">贞洁</div><div class="en">Chastity</div></div>
+      <div class="tile"><div class="icon">⏳</div><div class="name">耐心</div><div class="en">Patience</div></div>
+      <div class="tile"><div class="icon">⚖️</div><div class="name">节制</div><div class="en">Temperance</div></div>
+      <div class="tile"><div class="icon">🛠️</div><div class="name">勤奋</div><div class="en">Diligence</div></div>
+      <div class="tile"><div class="icon">💛</div><div class="name">仁爱</div><div class="en">Kindness</div></div>
+    </div>
+    <div class="muted" style="margin-top:70px">测试将告诉你：哪份美德最值得骄傲</div>
+  </div>
+  <div class="footnote">七宗罪 × 七美德 · 人格光影测试</div>
+</div>
+
+<!-- ============ 5 怎么玩 ============ -->
+<div class="stage hidden" id="s4">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:110px">How It Works</div>
+    <div class="h2 title-grad" style="margin-top:30px">三步，看见真实的自己</div>
+    <div class="divider"></div>
+    <div class="step"><div class="step-num">1</div><div class="step-txt"><b>凭第一直觉答题</b><span>21 道生活情境题，约 3 分钟</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-txt"><b>即时生成报告</b><span>主罪 × 主德 + 14 维人格雷达图</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-txt"><b>免费出报告</b><span>深度剖析 + 专属修炼路线</span></div></div>
+    <div class="cta-pill" style="margin-top:90px">马上测一测 →</div>
+  </div>
+  <div class="footnote">七宗罪 × 七美德 · 人格光影测试</div>
+</div>
+
+<!-- ============ 6 报告长什么样 ============ -->
+<div class="stage hidden" id="s5">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:80px">Your Report</div>
+    <div class="h2 title-grad" style="margin-top:26px">你的专属光影报告</div>
+    <div class="report-mock">
+      <div class="rm-badge">😡</div>
+      <div class="rm-main"><b>暴怒</b><span>你的主罪 · Wrath · 阴影浓度 68%</span></div>
+      <div class="rm-bar"><span class="lb">傲慢</span><div class="track"><div class="fill" style="width:42%;background:#c0504d"></div></div><span class="rm-pct">42%</span></div>
+      <div class="rm-bar"><span class="lb">贪婪</span><div class="track"><div class="fill" style="width:35%;background:#c07a2a"></div></div><span class="rm-pct">35%</span></div>
+      <div class="rm-bar"><span class="lb">嫉妒</span><div class="track"><div class="fill" style="width:58%;background:#7d8f2f"></div></div><span class="rm-pct">58%</span></div>
+      <div class="rm-bar"><span class="lb">暴怒</span><div class="track"><div class="fill" style="width:68%;background:#a3311f"></div></div><span class="rm-pct">68%</span></div>
+      <div class="rm-bar"><span class="lb">懒惰</span><div class="track"><div class="fill" style="width:30%;background:#6a6a78"></div></div><span class="rm-pct">30%</span></div>
+    </div>
+    <div class="muted" style="margin-top:50px">七宗罪 × 七美德 双维排行 + 雷达图 + 深度解读</div>
+  </div>
+  <div class="footnote">报告示意图，以实际测试结果为准</div>
+</div>
+
+<!-- ============ 7 适合谁 ============ -->
+<div class="stage hidden" id="s6">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:110px">Who It's For</div>
+    <div class="h2 title-grad" style="margin-top:30px">适合这样的你</div>
+    <div class="divider"></div>
+    <div style="text-align:left;max-width:840px;margin-top:50px">
+      <div class="body" style="margin-top:26px">🧭 想更了解自己、<br>&nbsp;&nbsp;&nbsp;&nbsp;却不知从何下手的人</div>
+      <div class="body" style="margin-top:26px">💬 在关系中反复受挫、<br>&nbsp;&nbsp;&nbsp;&nbsp;想看清相处模式的人</div>
+      <div class="body" style="margin-top:26px">🌱 想成长改变、<br>&nbsp;&nbsp;&nbsp;&nbsp;想要一份「修炼路线图」的人</div>
+      <div class="body" style="margin-top:26px">🎉 单纯好奇自己的<br>&nbsp;&nbsp;&nbsp;&nbsp;人格阴影面与光芒面的人</div>
+    </div>
+  </div>
+  <div class="footnote">七宗罪 × 七美德 · 人格光影测试</div>
+</div>
+
+<!-- ============ 8 免费引导卡 ============ -->
+<div class="stage hidden" id="s7">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="center">
+    <div class="kicker" style="margin-top:110px">Get Started</div>
+    <div class="h2 title-grad" style="margin-top:30px">七宗罪 × 七美德<br>人格光影测试</div>
+    <div class="divider"></div>
+    <div class="body" style="margin-top:30px">✅ 46 题在线测试 · 免费<br>✅ 14 维人格雷达报告<br>✅ 主罪 × 主德深度解读<br>✅ 专属修炼路线建议</div>
+    <div class="price-line" style="margin-top:60px">测试 · 报告 <b>全部免费</b></div>
+    <div class="cta-pill" style="margin-top:50px">点公众号菜单「免费测试」→</div>
+    <div class="muted" style="margin-top:40px">测完即出完整报告 · 分享给朋友一起测 🎉</div>
+  </div>
+  <div class="footnote">公众号每日一测 · 免费开测 · 免费报告</div>
+</div>
+
+<!-- ============ 9 结尾 ============ -->
+<div class="stage hidden" id="s8">
+  <div class="bg-radial"></div>
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="brand">PERSONALITY · LIGHT &amp; SHADOW</div>
+  <div class="center">
+    <div style="font-size:110px;margin-top:120px">⚖️</div>
+    <div class="h1 title-grad" style="margin-top:40px">认识自己<br>是终身浪漫的开始</div>
+    <div class="divider"></div>
+    <div class="muted">七宗罪不是审判，七美德不是标尺<br>它们只是照见你内心的一束光</div>
+    <div class="cta-pill" style="margin-top:90px">一起测测你的主罪主德 →</div>
+  </div>
+  <div class="footnote">七宗罪 × 七美德 · 人格光影测试</div>
+</div>
+
+<script>
+// 用 ?s=N 或 #sN 切换显示哪张卡片
+(function(){
+  var n = 0;
+  var m = location.search.match(/[?&]s=(\d+)/);
+  if (m) n = parseInt(m[1], 10);
+  var m2 = location.hash.match(/s(\d+)/);
+  if (m2) n = parseInt(m2[1], 10);
+  n = Math.max(0, Math.min(8, n));
+  document.querySelectorAll('.stage').forEach(function(el){ el.classList.add('hidden'); });
+  var target = document.getElementById('s' + n);
+  if (target) target.classList.remove('hidden');
+})();
+</script>
+</body>
+</html>
