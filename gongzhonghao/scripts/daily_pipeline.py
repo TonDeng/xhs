@@ -60,15 +60,60 @@ def list_question_sets():
     return sets
 
 
+# ---------- 发布历史（避免主题重复） ----------
+HISTORY_FILE = os.path.join(LOGS_DIR, "history.json")
+
+
+def load_history():
+    """返回 {qid: [date1, date2, ...]} 发布历史"""
+    if not os.path.exists(HISTORY_FILE):
+        return {}
+    try:
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def save_history(history):
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+
+def record_publish(qid, date_str):
+    history = load_history()
+    history.setdefault(qid, []).append(date_str)
+    save_history(history)
+
+
 def pick_question(dry_date=None):
-    """按日期轮换选题（取模），保证每天不重样"""
+    """
+    选题策略：优先选从未发布过的题库；
+    若全部发布过，选距离上次发布最久远的题库（最大化间隔，避免近期重复）。
+    """
     sets = list_question_sets()
     if not sets:
         raise RuntimeError("题库为空，请先在 questions/ 目录添加题库 JSON")
     d = dry_date or datetime.date.today()
-    # 用日期序数取模，按题库列表顺序轮换
-    idx = d.toordinal() % len(sets)
-    return sets[idx], idx
+    d_str = d.isoformat()
+    history = load_history()
+
+    # 1) 从未发布过的题库
+    never_published = [s for s in sets if s["id"] not in history]
+    if never_published:
+        # 按题库文件顺序取第一个未发布过的
+        return never_published[0], sets.index(never_published[0])
+
+    # 2) 全部发过：选距离上次发布最久远的
+    def last_gap(s):
+        dates = history.get(s["id"], [])
+        last = dates[-1]
+        return (d - datetime.date.fromisoformat(last)).days
+
+    # 最久未发布的优先（间隔最大）；同间隔按题库顺序
+    chosen = max(sets, key=lambda s: (last_gap(s), -sets.index(s)))
+    return chosen, sets.index(chosen)
 
 
 def build_markdown(qset, date):
@@ -160,6 +205,7 @@ def already_done_today():
 def mark_done(question_id):
     with open(os.path.join(LOGS_DIR, "last_publish.txt"), "w", encoding="utf-8") as f:
         f.write("%s|%s" % (today_marker(), question_id))
+    record_publish(question_id, today_marker())
 
 
 def generate_cover(qset, out_path):
